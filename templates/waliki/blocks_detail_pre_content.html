@@ -1,0 +1,10 @@
+{% block blocks_pre_content %}
+<div class="block">
+  {% block block_title %}<div class="block_header"><h1>This is a block</h1></div>{% endblock %}
+  {% block block_content %}
+    <div class="block_content">
+    block content {{ page.slug }}
+    </div>
+  {% endblock %}
+</div>
+{% endblock %}
