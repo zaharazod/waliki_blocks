@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from waliki.models import Page
+from zutils.models import SuperModel, SuperModelManager
 
 #import os, pkgutils
 #def get_packages():
@@ -21,19 +22,11 @@ from waliki.models import Page
 #        return func
 #    return decorate
 
-class Block(models.Model):
+class Block(SuperModel):
   name = models.CharField(max_length=40, blank=True)
   page = models.ForeignKey(Page)
 
-  @property
-  def actual(self):
-    if hasattr(self, '_actual'): return self._actual
-    for name in [ model._meta.model_name for model in models.get_models() ]:
-      try:
-        self._actual = getattr(self, name)
-        return self._actual
-      except: pass
-    return self
+  def __unicode__(self): return self.title
 
   @property
   def title(self): return self.actual.get_title()
@@ -44,4 +37,27 @@ class Block(models.Model):
     pass # need a request object here.. templatetag?
 
 class InfoBox(Block):
-  content = models.CharField(max_length=10)
+  image = models.ImageField(upload_to='blocks/images', blank=True, null=True)
+  caption = models.CharField(max_length=60, blank=True, null=True)
+
+  class Meta:
+    verbose_name = 'infobox'
+    verbose_name_plural = 'infoboxes'
+
+class InfoBoxSection(models.Model):
+  name = models.CharField(max_length=60)
+  infobox = models.ForeignKey(InfoBox)
+
+  class Meta:
+    verbose_name = 'section'
+    verbose_name_plural = 'sections'
+
+class InfoBoxEntry(models.Model):
+  label = models.CharField(max_length=60)
+  text = models.CharField(max_length=100)
+  link = models.URLField(blank=True, null=True)
+  section = models.ForeignKey(InfoBoxSection)
+
+  class Meta:
+    verbose_name = 'entry'
+    verbose_name_plural = 'entries'
