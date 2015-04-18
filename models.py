@@ -1,7 +1,10 @@
+import os
+from django.template import Library, Template, Context
+from django.template.loader import get_template
 from django.db import models
 from django.conf import settings
 from waliki.models import Page
-from zutils.models import SuperModel, SuperModelManager
+from zutils.models import SuperModel, SuperModelManager, DisplayModel
 
 #import os, pkgutils
 #def get_packages():
@@ -22,7 +25,7 @@ from zutils.models import SuperModel, SuperModelManager
 #        return func
 #    return decorate
 
-class Block(SuperModel):
+class Block(DisplayModel, SuperModel):
   name = models.CharField(max_length=40, blank=True)
   page = models.ForeignKey(Page)
 
@@ -31,10 +34,6 @@ class Block(SuperModel):
   @property
   def title(self): return self.actual.get_title()
   def get_title(self): return self.name
-
-  @property
-  def content(self):
-    pass # need a request object here.. templatetag?
 
 class InfoBox(Block):
   image = models.ImageField(upload_to='blocks/images', blank=True, null=True)
@@ -61,3 +60,13 @@ class InfoBoxEntry(models.Model):
   class Meta:
     verbose_name = 'entry'
     verbose_name_plural = 'entries'
+
+class QuipBox(Block):
+  def get_random_quip(self):
+    x = self.quip_set.all()[0]
+    return x
+
+class Quip(models.Model):
+  quip = models.CharField(max_length=500)
+  quipbox = models.ForeignKey(QuipBox)
+
