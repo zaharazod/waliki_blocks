@@ -20,10 +20,10 @@ class InfoBoxAdmin(NestedModelAdmin):
 
 admin.site.register(InfoBox, InfoBoxAdmin)
 
-class QuipAdmin(models.StackedInline):
+class QuipAdmin(admin.StackedInline):
   fields = ('quips',)
 
-class QuipBoxAdmin(models.Model):
+class QuipBoxAdmin(admin.ModelAdmin):
   inlines = [ QuipAdmin, ]
 
 admin.site.register(QuipBox, QuipBoxAdmin)
