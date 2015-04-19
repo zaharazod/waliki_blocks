@@ -1,0 +1,6 @@
+{% if obj.image %}
+<div class="infobox_image">
+<img src="{{ obj.image.url }}" class="infobox_image" /><br/>
+<span class="infobox_caption">{{ obj.caption }}</span>
+</div>
+{% endif %}
