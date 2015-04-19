@@ -1,10 +1,13 @@
 import os
+from django.db.models import Max
+from random import randint
 from django.template import Library, Template, Context
 from django.template.loader import get_template
 from django.db import models
 from django.conf import settings
 from waliki.models import Page
-from zutils.models import SuperModel, SuperModelManager, DisplayModel
+from zutils.models import SuperModel, RandomModel, DisplayModel, ZUtilModel
+
 
 #import os, pkgutils
 #def get_packages():
@@ -25,7 +28,7 @@ from zutils.models import SuperModel, SuperModelManager, DisplayModel
 #        return func
 #    return decorate
 
-class Block(DisplayModel, SuperModel):
+class Block(ZUtilModel):
   name = models.CharField(max_length=40, blank=True)
   page = models.ForeignKey(Page)
 
@@ -62,11 +65,10 @@ class InfoBoxEntry(models.Model):
     verbose_name_plural = 'entries'
 
 class QuipBox(Block):
-  def get_random_quip(self):
-    x = self.quip_set.all()[0]
-    return x
+  def random_quip(self):
+    return Quip.random.filter(quipbox=self).random()
 
-class Quip(models.Model):
+class Quip(RandomModel):
   quip = models.CharField(max_length=500)
-  quipbox = models.ForeignKey(QuipBox)
+  quipbox = models.ForeignKey('QuipBox')
 
