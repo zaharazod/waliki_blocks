@@ -25,3 +25,5 @@ class QuipAdmin(models.StackedInline):
 
 class QuipBoxAdmin(models.Model):
   inlines = [ QuipAdmin, ]
+
+admin.site.register(QuipBox, QuipBoxAdmin)
