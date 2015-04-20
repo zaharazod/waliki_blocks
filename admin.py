@@ -21,6 +21,7 @@ class InfoBoxAdmin(NestedModelAdmin):
 admin.site.register(InfoBox, InfoBoxAdmin)
 
 class QuipAdmin(admin.StackedInline):
+  model = Quip
   fields = ('quips',)
 
 class QuipBoxAdmin(admin.ModelAdmin):
